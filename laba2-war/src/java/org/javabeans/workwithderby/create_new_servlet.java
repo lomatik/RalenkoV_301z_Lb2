@@ -9,6 +9,7 @@ import com.library.Books;
 import com.library.Genres;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -42,12 +43,31 @@ public class create_new_servlet extends HttpServlet {
         int year_of_book = Integer.parseInt(request.getParameter("year_of_book"));
         String city_of_print = request.getParameter("city_of_print");
         String id_genre = request.getParameter("id_genre");
+        Genres genre = null;
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("laba2-warPU");
         EntityManager em = factory.createEntityManager();
         
+               
+        List<Genres> genres = em.createNamedQuery("Genres.findAll").getResultList();
+        
+        for (Genres item: genres) {
+            int id = item.getId();
+            String name_genre = item.getNamegenre();
+            String typegenre = item.getTypegenre();
+            int yeargenre = item.getYeargenre();
+            
+            System.out.println("\n================\n");
+            System.out.println("id: " + id);
+            System.out.println("namegenre: " + name_genre);
+            System.out.println("typegenre: " + typegenre);
+            System.out.println("yeargenre: " + yeargenre);
+            
+            if (item.getId() == Integer.parseInt(id_genre)) genre = item;
+        }
+        
         Books books = new Books();
         
-        //books.setIdgenre(genres);
+        books.setIdgenre(genre);
         books.setName_of_author(name_of_author);
         books.setSurname_of_author(surname_of_author);
         books.setName_of_book(name_of_book);
@@ -60,19 +80,7 @@ public class create_new_servlet extends HttpServlet {
         
         em.close();
         
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet create_new_servlet_genre</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet create_new_servlet_genre at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        request.getRequestDispatcher("/successfullyinserted.jsp").forward(request,response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

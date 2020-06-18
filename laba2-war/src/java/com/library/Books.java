@@ -18,10 +18,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.Valid;
+/*import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Size;*/
 /**
  *
  * @author lomatik
@@ -43,10 +43,10 @@ public class Books implements Serializable {
     public String surname_of_author;
     @Column(name="NAMEAUTHOR")
     public String name_of_author;
-    @Valid
+    /*@Valid
     @NotNull(message="Введіть назву книги!!!")
     @Pattern(regexp = "[a-zA-Z]*", message = "Ви ввели некоректні символи у назві книги!!!")
-    @Size(min = 3, message="Назва книги повинан бути більшою за 3 символи!!!")
+    @Size(min = 3, message="Назва книги повинан бути більшою за 3 символи!!!")*/
     @Column(name="NAMEBOOK")
     public String name_of_book;
     @Column(name="YEARBOOK")
