@@ -16,7 +16,7 @@
         </head>
         <body>
             <h1>Видалення прошло успішно!</h1>
-            <form action="index.html">
+            <form action="index.jsp">
                 <input type="submit" name="index_btn" value="На головну">
             </form>
             <form>

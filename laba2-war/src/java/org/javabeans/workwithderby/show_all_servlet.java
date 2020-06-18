@@ -34,10 +34,6 @@ public class show_all_servlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-        HttpSession session = request.getSession();
-        session.setAttribute("url", "google.com");
-        session.removeAttribute("url");
-        
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("laba2-warPU");
         EntityManager em = factory.createEntityManager();
         

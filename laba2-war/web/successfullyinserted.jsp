@@ -17,7 +17,7 @@
         </head>
         <body>
             <h1>Успішно додано до бази даних</h1>
-            <form action="index.html">
+            <form action="index.jsp">
                 <input type="submit" name="index_btn" value="На головну">
             </form>
             <form action="show_all_servlet">
