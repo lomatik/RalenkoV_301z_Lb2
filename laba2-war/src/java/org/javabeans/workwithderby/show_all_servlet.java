@@ -41,6 +41,16 @@ public class show_all_servlet extends HttpServlet {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("laba2-warPU");
         EntityManager em = factory.createEntityManager();
         
+        String[] namegenreArray = new String[10000];
+        
+        List<Genres> genres = em.createNamedQuery("Genres.findAll").getResultList();
+        
+        for (Genres item: genres) {
+            int id_genre = item.getId();
+            String name_genre = item.getNamegenre();
+            namegenreArray[id_genre] = name_genre;
+        }
+
         Query query = null;
         
         String And = " AND ";
@@ -52,7 +62,6 @@ public class show_all_servlet extends HttpServlet {
         String name_of_book;   
         String year_of_book;
         String city_of_print;
-        String id_genre_book;
         
         if (request.getParameter("surname_of_author") == null) {
             surname_of_author= "";
@@ -79,76 +88,59 @@ public class show_all_servlet extends HttpServlet {
         }
         else city_of_print = request.getParameter("city_of_print");
         
-        if (request.getParameter("id_genre") == null) id_genre_book = "";
-        else id_genre_book = request.getParameter("id_genre");
         
         if ("".equals(surname_of_author) && "".equals(name_of_author) 
                 && "".equals(name_of_book) && "".equals(year_of_book) 
-                && "".equals(city_of_print) && "".equals(id_genre_book)){
+                && "".equals(city_of_print)){
             query = em.createNamedQuery("Books.findAll");
         }
         
         else if (!"".equals(surname_of_author) || !"".equals(name_of_author) 
                 || !"".equals(name_of_book) || !"".equals(year_of_book) 
-                || !"".equals(city_of_print) || !"".equals(id_genre_book)){
-            sql = "SELECT b FROM Books b";
+                || !"".equals(city_of_print)){
+            sql = "SELECT b FROM Books b WHERE ";
             if (!"".equals(surname_of_author)) {
                 sql += "b.surname_of_author = :surname_of_author";
-                query.setParameter("surname_of_author", surname_of_author);
                 if(!"".equals(name_of_author) || !"".equals(name_of_book) 
-                    || !"".equals(year_of_book) || !"".equals(city_of_print)
-                        || !"".equals(id_genre_book)){
+                    || !"".equals(year_of_book) || !"".equals(city_of_print)){
                     sql += And;
                 }
             }
         
             if (!"".equals(name_of_author)) {
                 sql += "b.name_of_author = :name_of_author";
-                query.setParameter("name_of_author", name_of_author);
                 if(!"".equals(name_of_book) || !"".equals(year_of_book) 
-                        || !"".equals(city_of_print) || !"".equals(id_genre_book)){
+                        || !"".equals(city_of_print)){
                     sql += And;
                 }
             }
         
             if (!"".equals(name_of_book)) {
                 sql += "b.name_of_book = :name_of_book";
-                query.setParameter("name_of_book", name_of_book);
-                if(!"".equals(year_of_book) || !"".equals(city_of_print)
-                        || !"".equals(id_genre_book)){
+                if(!"".equals(year_of_book) || !"".equals(city_of_print)){
                     sql += And;
                 }
             }
         
             if (!"".equals(year_of_book)) {
                 sql += "b.year_of_book = :year_of_book";
-                query.setParameter("namegenre", year_of_book);
-                if(!"".equals(city_of_print) || !"".equals(id_genre_book)){
+                if(!"".equals(city_of_print)){
                     sql += And;
                 }
             }
         
-            if (!"".equals(year_of_book)) {
-                sql += "b.year_of_book = :year_of_book";
-                query.setParameter("year_of_book", year_of_book);
-                if(!"".equals(id_genre_book)){
-                    sql += And;
-                }
+            if (!"".equals(city_of_print)) {
+                sql += "b.city_of_print = :city_of_print";
+                
             }
+            query = em.createQuery(sql);
             
-            if(!"".equals(id_genre_book)){
-                sql += "b.idgenre = :idgenre";
-                query.setParameter("idgenre", id_genre_book);
-            }
-        }
-        
-        String[] namegenreArray = new String[10000];
-        List<Genres> genres = em.createNamedQuery("Genres.findAll").getResultList();
-        
-        for (Genres item: genres) {
-            int id_genre = item.getId();
-            String name_genre = item.getNamegenre();
-            namegenreArray[id_genre] = name_genre;
+            if (!"".equals(surname_of_author)) query.setParameter("surname_of_author", surname_of_author);
+            if (!"".equals(name_of_author)) query.setParameter("name_of_author", name_of_author);
+            if (!"".equals(name_of_book)) query.setParameter("name_of_book", name_of_book);
+            if (!"".equals(year_of_book)) query.setParameter("year_of_book", Integer.parseInt(year_of_book));
+            if (!"".equals(city_of_print)) query.setParameter("city_of_print", city_of_print);
+            
         }
         
         List<Books> books = query.getResultList();

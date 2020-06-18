@@ -6,7 +6,6 @@
 
 <%@page import="java.util.LinkedList"%>
 <%@page import="java.util.List"%>
-<%@page import="com.library.Genres"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
@@ -28,13 +27,6 @@
             Назва книги<input type="text" name="name_of_book" id = "namebook"><br>
             Рік видавництва книги<input type="text" name="year_of_book" id="check"><br>
             Місто видавництва <input type="text" name="city_of_print" id = "city"><br>
-            <select id = "select_" name="genreSelect" size="6">
-            <%if (request.getAttribute("genres") != null) {
-                for(Genres item: (List<Genres>) request.getAttribute("genres")) {
-                    out.println("<option value=\""+item.getId()+"\">"+item.getNamegenre()+"</option>");
-                }
-            }%>
-            </select><br>
             <input type="button" name="show_btn" value="Показати" id="btn"><br>
         </form>
         <script> 
@@ -50,7 +42,6 @@
                     "&name_of_book=" + document.getElementById("namebook").value +
                     "&year_of_book=" + document.getElementById("check").value +
                     "&city_of_print=" + document.getElementById("city").value +
-                    "&id_genre=" + document.getElementById("select_").value +
                     "&show_btn=%D0%9F%D0%BE%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D0%B8";
                 };
             };
