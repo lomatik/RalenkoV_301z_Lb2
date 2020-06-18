@@ -28,13 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "Show_to_delete", urlPatterns = {"/Show_to_delete"})
 public class Show_to_delete extends HttpServlet {
-    static final String JDBC_DRIVER = "java.sql.Driver";
-    static final String DATABASE_URL = "jdbc:derby://localhost:1527/item_library";
-    
-    static final String USER = "APP";
-    static final String PASSWORD = "123";
-    
-    
+ 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         request.getSession(true);
@@ -91,10 +85,9 @@ public class Show_to_delete extends HttpServlet {
         else if (!"".equals(surname_of_author) || !"".equals(name_of_author) 
                 || !"".equals(name_of_book) || !"".equals(year_of_book) 
                 || !"".equals(city_of_print) || !"".equals(id_genre_book)){
-            sql = "SELECT b FROM Books b";
+            sql = "SELECT b FROM Books b WHERE ";
             if (!"".equals(surname_of_author)) {
                 sql += "b.surname_of_author = :surname_of_author";
-                query.setParameter("surname_of_author", surname_of_author);
                 if(!"".equals(name_of_author) || !"".equals(name_of_book) 
                     || !"".equals(year_of_book) || !"".equals(city_of_print)
                         || !"".equals(id_genre_book)){
@@ -104,7 +97,6 @@ public class Show_to_delete extends HttpServlet {
         
             if (!"".equals(name_of_author)) {
                 sql += "b.name_of_author = :name_of_author";
-                query.setParameter("name_of_author", name_of_author);
                 if(!"".equals(name_of_book) || !"".equals(year_of_book) 
                         || !"".equals(city_of_print) || !"".equals(id_genre_book)){
                     sql += And;
@@ -113,7 +105,6 @@ public class Show_to_delete extends HttpServlet {
         
             if (!"".equals(name_of_book)) {
                 sql += "b.name_of_book = :name_of_book";
-                query.setParameter("name_of_book", name_of_book);
                 if(!"".equals(year_of_book) || !"".equals(city_of_print)
                         || !"".equals(id_genre_book)){
                     sql += And;
@@ -122,7 +113,6 @@ public class Show_to_delete extends HttpServlet {
         
             if (!"".equals(year_of_book)) {
                 sql += "b.year_of_book = :year_of_book";
-                query.setParameter("namegenre", year_of_book);
                 if(!"".equals(city_of_print) || !"".equals(id_genre_book)){
                     sql += And;
                 }
@@ -130,7 +120,6 @@ public class Show_to_delete extends HttpServlet {
         
             if (!"".equals(year_of_book)) {
                 sql += "b.year_of_book = :year_of_book";
-                query.setParameter("year_of_book", year_of_book);
                 if(!"".equals(id_genre_book)){
                     sql += And;
                 }
@@ -138,7 +127,18 @@ public class Show_to_delete extends HttpServlet {
             
             if(!"".equals(id_genre_book)){
                 sql += "b.idgenre = :idgenre";
-                query.setParameter("idgenre", id_genre_book);
+            }
+            
+            query = em.createQuery(sql);
+            
+            if (!"".equals(surname_of_author)) query.setParameter("surname_of_author", surname_of_author);
+            if (!"".equals(name_of_author)) query.setParameter("name_of_author", name_of_author);
+            if (!"".equals(name_of_book)) query.setParameter("name_of_book", name_of_book);
+            if (!"".equals(year_of_book)) query.setParameter("year_of_book", Integer.parseInt(year_of_book));
+            if (!"".equals(city_of_print)) query.setParameter("city_of_print", city_of_print);
+            if (!"".equals(id_genre_book)) {
+                Genres genre = em.find(Genres.class, Integer.parseInt(id_genre_book));
+                query.setParameter("idgenre", genre);
             }
         }
         
@@ -163,15 +163,6 @@ public class Show_to_delete extends HttpServlet {
         
         List<Books> books = query.getResultList();
 
-        String[] nameauthorArray = new String[1000];
-        String[] surnameauthorArray = new String[1000];
-        String[] namebookArray = new String[1000];
-        int[] yearbookArray = new int[1000];
-        String[] cityofprintArray = new String[1000];
-        int countofArray = 0;
-        
-        int[] idgenreArray = new int[1000];
-
         for (Books item: books) {
             int id = item.getId();
             String name = item.getName_of_author();
@@ -180,15 +171,6 @@ public class Show_to_delete extends HttpServlet {
             int yearbook = item.getYear_of_book();
             String cityofprint = item.getCity_of_print();
             int id_genre = item.getIdgenre();
-            
-            nameauthorArray[countofArray] = name;
-            surnameauthorArray[countofArray] = surnameauthor;
-            namebookArray[countofArray] = namebook;
-            yearbookArray[countofArray] = yearbook;
-            cityofprintArray[countofArray] = cityofprint;
-            idgenreArray[countofArray] = id_genre;
-            
-            countofArray++;
             
             System.out.println("\n================\n");
             System.out.println("id: " + id);

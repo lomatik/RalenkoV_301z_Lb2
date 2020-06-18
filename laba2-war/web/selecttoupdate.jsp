@@ -4,8 +4,8 @@
     Author     : lomatik
 --%>
 <%@page import="java.util.List"%>
-<%@page import="com.library.Book"%>
-<%@page import="com.library.Genre"%>
+<%@page import="com.library.Books"%>
+<%@page import="com.library.Genres"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
@@ -31,7 +31,7 @@
             Місто видавництва <input type="text" name="city_of_print" id = "city"><br>
             <select id = "select_" name="genreSelect" size="6">
             <%if (request.getAttribute("Genres") != null) {
-                for(Genre item: (List<Genre>) request.getAttribute("Genres")) {
+                for(Genres item: (List<Genres>) request.getAttribute("Genres")) {
                     out.println("<option value=\""+item.getId()+"\">"+item.getNamegenre()+"</option>");
                 }
             }%>
@@ -40,7 +40,7 @@
             <table>
             <tr><th>Вибір</th><th>Ім'я автора</th><th>Прізвище автора</th><th>Назва книги</th><th>Рік видавництва</th><th>Місто видавництва</th><th>Назва жанру</th></tr>
             <%if (request.getAttribute("Books") != null) {
-                   for(Book item: (List<Book>) request.getAttribute("Books")) {
+                   for(Books item: (List<Books>) request.getAttribute("Books")) {
                        out.println("<tr><td><input type=\"radio\" name=\"item\" "
                 + " id = \""+ item.getId()+"\" /></td><td>"+ item.getName_of_author() + "</td><td>" 
                 + item.getSurname_of_author() + "</td><td>" + item.getName_of_book()

@@ -28,7 +28,7 @@
                 + " id = \""+ item.getId()+"\" /></td><td>"+ item.getName_of_author() + "</td><td>" 
                 + item.getSurname_of_author() + "</td><td>" + item.getName_of_book()
                 + "</td><td>" + item.getYear_of_book() + "</td><td>"
-                + item.getCity_of_print() + "</td><td>"+ item.getGenre() +"</td></tr>");
+                + item.getCity_of_print() + "</td><td>"+ item.getGenre() + "</td></tr>");
                    }
             }%>           
             </table>

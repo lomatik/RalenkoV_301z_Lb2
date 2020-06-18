@@ -6,7 +6,7 @@
 
 <%@page import="java.util.LinkedList"%>
 <%@page import="java.util.List"%>
-<%@page import="com.library.Genre"%>
+<%@page import="com.library.Genres"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
@@ -30,7 +30,7 @@
             Місто видавництва <input type="text" name="city_of_print" id = "city"><br>
             <select id = "select_" name="genreSelect" size="6">
             <%if (request.getAttribute("genres") != null) {
-                for(Genre item: (List<Genre>) request.getAttribute("genres")) {
+                for(Genres item: (List<Genres>) request.getAttribute("genres")) {
                     out.println("<option value=\""+item.getId()+"\">"+item.getNamegenre()+"</option>");
                 }
             }%>

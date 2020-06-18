@@ -5,13 +5,14 @@
  */
 package org.javabeans.workwithderby;
 
+import com.library.Genres;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,35 +26,24 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "DeleteSelected_genre", urlPatterns = {"/DeleteSelected_genre"})
 public class DeleteSelected_genre extends HttpServlet {
 
-    static final String JDBC_DRIVER = "java.sql.Driver";
-    static final String DATABASE_URL = "jdbc:derby://localhost:1527/item_library";
-    
-    static final String USER = "APP";
-    static final String PASSWORD = "123";
-    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-        System.out.println("Registering JDBC driver...");
-        
-        Class.forName("java.sql.Driver");
-
-        System.out.println("Creating database connection...");
-        Connection connection = DriverManager.getConnection(DATABASE_URL, USER, PASSWORD);
-
-        System.out.println("Executing statement...");
-        Statement statement = connection.createStatement();
-        
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("laba2-warPU");
+        EntityManager em = factory.createEntityManager();
         String idchecked = request.getParameter("idchecked");
+        
+        Genres genre = em.find(Genres.class, Integer.parseInt(idchecked));
         
         String sql;
         sql = "DELETE FROM GENRES WHERE ID = " + idchecked;
         
-        statement.executeUpdate(sql);
-        System.out.println("Successfully deleted");
+        em.getTransaction().begin();
+        em.remove(genre);
+        em.getTransaction().commit();
         
-        System.out.println("Closing connection and releasing resources...");
-        statement.close();
-        connection.close();
+        System.out.println(sql);
+        
+        em.close();
         
         request.getRequestDispatcher("/deletedsuccess.jsp").forward(request,response);
         

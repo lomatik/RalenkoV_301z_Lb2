@@ -119,6 +119,10 @@ public class Books implements Serializable {
     public int getIdgenre() {
         return idgenre.getId();
     }
+    
+    public String getGenre(){
+        return idgenre.getNamegenre();
+    }
 
     public void setIdgenre(Genres idgenre) {
         this.idgenre = idgenre;

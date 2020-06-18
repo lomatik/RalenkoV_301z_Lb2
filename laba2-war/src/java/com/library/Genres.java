@@ -6,6 +6,7 @@
 package com.library;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -88,6 +89,42 @@ public class Genres implements Serializable {
         this.id = id;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 67 * hash + this.id;
+        hash = 67 * hash + Objects.hashCode(this.namegenre);
+        hash = 67 * hash + Objects.hashCode(this.typegenre);
+        hash = 67 * hash + this.yeargenre;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Genres other = (Genres) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (this.yeargenre != other.yeargenre) {
+            return false;
+        }
+        if (!Objects.equals(this.namegenre, other.namegenre)) {
+            return false;
+        }
+        return true;
+    }
+
+    
+    
     @Override
     public String toString() {
         return "Genre{" + "id=" + id + ", namegenre=" + namegenre + ", typegenre=" + typegenre + ", yeargenre=" + yeargenre + '}';

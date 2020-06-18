@@ -5,13 +5,14 @@
  */
 package org.javabeans.workwithderby;
 
+import com.library.Genres;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,23 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "UpdateSelected_genre", urlPatterns = {"/UpdateSelected_genre"})
 public class UpdateSelected_genre extends HttpServlet {
 
-    static final String JDBC_DRIVER = "java.sql.Driver";
-    static final String DATABASE_URL = "jdbc:derby://localhost:1527/item_library";
-    
-    static final String USER = "APP";
-    static final String PASSWORD = "123";
-    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-        System.out.println("Registering JDBC driver...");
-        
-        Class.forName("java.sql.Driver");
-
-        System.out.println("Creating database connection...");
-        Connection connection = DriverManager.getConnection(DATABASE_URL, USER, PASSWORD);
-
-        System.out.println("Executing statement...");
-        Statement statement = connection.createStatement();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("laba2-warPU");
+        EntityManager em = factory.createEntityManager();
         
         String And = " ,";
         
@@ -67,33 +55,37 @@ public class UpdateSelected_genre extends HttpServlet {
       
         String idchecked = request.getParameter("idchecked");
         
+        Genres genre = em.find(Genres.class, Integer.parseInt(idchecked));
+        
         String sql;
         sql = "UPDATE GENRES SET ";
         
         if (!"".equals(name)) {
             sql += "NAMEGENRE = '" + name + "'";
+            genre.setNamegenre(name);
             if (!"".equals(type) || !"".equals(year)) sql += And;
         }
         
         if (!"".equals(type)) {
             sql += "TYPEGENRE = '" + type + "'";
+            genre.setTypegenre(type);
             if (!"".equals(year)) sql += And;
         }
         
         if (!"".equals(year)) {
+            genre.setYeargenre(Integer.parseInt(year));
             sql += "YEARGENRE = " + year;
         }
+        
+        em.getTransaction().begin();
+        em.merge(genre);
+        em.getTransaction().commit();
         
         sql+=" WHERE ID = " +idchecked;
         
         System.out.println(sql);
         
-        statement.executeUpdate(sql);
-        System.out.println("Successfully updated");
-        
-        System.out.println("Closing connection and releasing resources...");
-        statement.close();
-        connection.close();
+        em.close();
         
         request.getRequestDispatcher("/updatesuccess.jsp").forward(request,response);
         
