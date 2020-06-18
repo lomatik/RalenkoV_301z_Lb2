@@ -10,6 +10,7 @@ import com.library.Genres;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -18,6 +19,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 /**
  *
@@ -66,11 +71,23 @@ public class create_new_servlet extends HttpServlet {
         }
         
         Books books = new Books();
+        books.setName_of_book(name_of_book);
+        
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        
+        ValidatorFactory factoryV = Validation.buildDefaultValidatorFactory();
+        Validator validator = factoryV.getValidator();
+        Set<ConstraintViolation<Books>> constraints = validator.validate(books);
+        out.println("<html><body><center>");
+        for (ConstraintViolation<Books> constraint : constraints) {
+        out.println("<h2>"+ constraint.getMessage()+"</h2>");         
+        }
+        if(constraints.size()==0){
         
         books.setIdgenre(genre);
         books.setName_of_author(name_of_author);
         books.setSurname_of_author(surname_of_author);
-        books.setName_of_book(name_of_book);
         books.setYear_of_book(year_of_book);
         books.setCity_of_print(city_of_print);
         
@@ -81,6 +98,7 @@ public class create_new_servlet extends HttpServlet {
         em.close();
         
         request.getRequestDispatcher("/successfullyinserted.jsp").forward(request,response);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
